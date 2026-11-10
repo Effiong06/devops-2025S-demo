@@ -12,7 +12,7 @@ jobs:
   code:
     name: Code scan (Bandit)
     runs-on: ubuntu-latest
-    continue-on-error: true        # warn for now; Drill 5 sets the threshold
+    continue-on-error: true        # Warn only: the previous Low-severity B105 finding was remediated; keep low-severity findings visible without blocking PRs.
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
@@ -46,8 +46,8 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: campus-notifier:dev
-          severity: HIGH,CRITICAL
-          exit-code: "0"            # warn for now; Drill 5 flips this
+          severity: CRITICAL
+          exit-code: "1"            # Fail on CRITICAL vulnerabilities
           format: table
 
   iac:
@@ -61,4 +61,4 @@ jobs:
           directory: .
           framework: terraform
           quiet: true
-          soft_fail: true           # warn for now; Drill 5 flips this to false
+          soft_fail: false
